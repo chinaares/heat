@@ -1,0 +1,24 @@
+description: >
+  Very basic template
+
+parameters:
+  name:
+    type: string
+    default: internal04
+    constraints:
+      - allowed_values: [internal01, internal02,internal03,internal04]
+        description: Allowed values internal01,internak02,internal03,internal04
+
+resources:
+  net01:
+   type: OS::Neutron::Net
+   properties:
+     name:  { get_param: name }
+     shared: False
+     admin_state_up: True
+
+outputs:
+  net01_name:
+    description: name of the created network
+    value: { get_attr: [ net01, name] }
+
