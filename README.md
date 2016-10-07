@@ -1,24 +1,24 @@
 # heat
 basic heat examples
 
-- first.yaml
+##- first.yaml
 
 Creates a network
 
 
-- Second.yaml
+##- Second.yaml
 
 Creates an instance on the private network, this network should be already created
 
 
-- Third.yaml
+##- Third.yaml
 
 demostratrs how to execute scrips inside the deployed image using os-collect-config. It also demostrates how to create a glance image with the required software
 
 
 
-
-]# heat stack-list
+```
+# heat stack-list
 
 heat stack-show <stack>
 ...
@@ -79,8 +79,10 @@ outputs               | [                                                       
 | resource_status_reason | state changed                                                                                                                                    |
 | resource_type          | OS::Heat::SoftwareConfig                                                                                                                         |
 | updated_time           | 2016-09-27T14:39:58Z                                                                                                                             |
+```
 
 
+```
 
 # heat output-show sconfig --all
 [
@@ -108,7 +110,9 @@ outputs               | [                                                       
     "output_key": "netinfo"
   }
 ]
+```
 
+```
 
 # heat event-list sconfig
 +---------------+--------------------------------------+-------------------------------------+--------------------+----------------------+
@@ -121,13 +125,16 @@ outputs               | [                                                       
 | my_instance   | 4d4ff4ac-32f4-453d-9b38-4bfe76608b53 | state changed                       | CREATE_COMPLETE    | 2016-09-27T14:40:18Z |
 | sconfig       | 2cbf3e90-1bed-40fb-88c5-2b2587affa03 | Stack CREATE completed successfully | CREATE_COMPLETE    | 2016-09-27T14:40:18Z |
 +---------------+--------------------------------------+-------------------------------------+--------------------+----------------------+
+```
 
+```
 
 # heat resorce-show boot_acript  doesnt work because it is not a software deployment, its a software congig
 
 ]# grep admin_tok /etc/keystone/keystone.conf
 #admin_token = ADMIN
 admin_token = c3c42fc52fe4439ca0e705ea150005e6
+```
 
 
     An OS::Heat::SoftwareConfig resource - this encapsulates the config to be applied, e.g a script, puppet manifest, or any other config definition format you care to use.  This is just a wrapper for the config to apply, optionally parameterized with input values, it doesn't actually configure anything.
@@ -137,11 +144,13 @@ An OS::Heat::SoftwareDeployment resource - this is the thing which actually appl
   An OS::Nova::Server resource - this is the instance (or physical server in the case of TripleO deploying via Nova and Ironic) being configured, it must contain some tools to support SoftwareConfig, as discussed below, and define the user_data_format property to enable SoftwareConfig.
 
 
-- Forth.yaml
+##- Forth.yaml
 
 Dermodtrates how execute scripts inside the deployed instance usiung cloud-init
 
 as you cansee, the script is not a resource, its a parameter
+```
+
 # heat resource-list a
 
 
@@ -150,7 +159,9 @@ as you cansee, the script is not a resource, its a parameter
 +---------------+--------------------------------------+------------------+-----------------+----------------------+
 | my_instance   | f78b5ba2-a3e6-4be7-9bc3-b570f09d19f6 | OS::Nova::Server | CREATE_COMPLETE | 2016-10-06T12:32:58Z |
 +---------------+--------------------------------------+------------------+-----------------+----------------------+
+```
 
+```
 
 ]# heat stack-show a
 
@@ -209,6 +220,7 @@ as you cansee, the script is not a resource, its a parameter
 | timeout_mins          | 60                                                                                                                   |
 | updated_time          | None                                                                                                                 |
 +-----------------------+----------------------------------------------------------------------------------------------------------------------+
+```
 
 
 
