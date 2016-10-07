@@ -34,10 +34,10 @@ redhat-common element README files.
 
 
 
-export REG_REPOS='rhel-7-server-optional-rpms,rhel-7-server-extras-rpms rhel-7-server-openstack-rpms'
-export REG_AUTO_ATTACH=true
+export REG_REPOS='rhel-7-server-optional-rpms,rhel-7-server-extras-rpms,rhel-7-server-openstack-7.0-rpms'
+export REG_AUTO_ATTACH=false
 export REG_USER='rhn-support-ebarrera'
 export REG_PASSWORD='Berili1m286'
 export REG_METHOD=portal
-
+export REG_POOL_ID=8a85f9833e1404a9013e3cddf95a0599
 
