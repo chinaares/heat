@@ -1,0 +1,72 @@
+heat_template_version: 2015-04-30
+
+description: Simple template to deploy a single compute instance
+
+parameters:
+  key:
+    type: string
+    default: hypervisor
+    label: Key to Use
+    description: Key that will be injected to the instance
+    constraints:
+      - custom_constraint: nova.keypair #validates that the key exist
+
+
+  flavor: 
+    type: string
+    label: Flavor
+    default: m1.small
+    constraints:
+      - custom_constraint: nova.flavor
+
+  image:
+    type: string
+    label: Image
+    default: centos7-cloudinit
+    constraints:
+      - custom_constraint: glance.image
+
+  foo:
+    type: string
+    default: these is the strin to pass
+
+
+resources:
+
+
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      key_name: { get_param: key }
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      admin_pass: redhat
+      name: myinstance
+      networks:
+       -  network: private
+       -  network: internal02
+      user_data:
+        str_replace:
+          template: |
+           #!/bin/bash
+            echo "Running boot script with $FOO" > /executed.txt
+          params:
+            $FOO: {get_param: foo}
+   
+                 
+ 
+        
+outputs:
+  my_ip1:
+    description: The IP assigned to me
+    value: { get_attr: [my_instance, first_address] }
+
+  netinfo:
+    description: all network information
+    value: { get_attr: [my_instance, networks] }
+
+  my_ip0:
+    description: The IP assigned to me
+    value: { get_attr: [my_instance, networks, 0] }
+
+
