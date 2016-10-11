@@ -1,26 +1,24 @@
 # heat
 basic heat examples
 
-- first.yaml
+##- first.yaml
 
 Creates a network
 
 
-- Second.yaml
+##- Second.yaml
 
 Creates an instance on the private network, this network should be already created
 
-Template creating everything, router, network floting, attachment
 
-https://github.com/openstack-infra/tripleo-ci/blob/master/templates/tenantvm_floatingip.yaml
-- Third.yaml
+##- Third.yaml
 
 demostratrs how to execute scrips inside the deployed image using os-collect-config. It also demostrates how to create a glance image with the required software
 
 
 
-
-]# heat stack-list
+```
+# heat stack-list
 
 heat stack-show <stack>
 ...
@@ -81,8 +79,10 @@ outputs               | [                                                       
 | resource_status_reason | state changed                                                                                                                                    |
 | resource_type          | OS::Heat::SoftwareConfig                                                                                                                         |
 | updated_time           | 2016-09-27T14:39:58Z                                                                                                                             |
+```
 
 
+```
 
 # heat output-show sconfig --all
 [
@@ -110,7 +110,9 @@ outputs               | [                                                       
     "output_key": "netinfo"
   }
 ]
+```
 
+```
 
 # heat event-list sconfig
 +---------------+--------------------------------------+-------------------------------------+--------------------+----------------------+
@@ -123,13 +125,16 @@ outputs               | [                                                       
 | my_instance   | 4d4ff4ac-32f4-453d-9b38-4bfe76608b53 | state changed                       | CREATE_COMPLETE    | 2016-09-27T14:40:18Z |
 | sconfig       | 2cbf3e90-1bed-40fb-88c5-2b2587affa03 | Stack CREATE completed successfully | CREATE_COMPLETE    | 2016-09-27T14:40:18Z |
 +---------------+--------------------------------------+-------------------------------------+--------------------+----------------------+
+```
 
+```
 
 # heat resorce-show boot_acript  doesnt work because it is not a software deployment, its a software congig
 
 ]# grep admin_tok /etc/keystone/keystone.conf
 #admin_token = ADMIN
 admin_token = c3c42fc52fe4439ca0e705ea150005e6
+```
 
 
     An OS::Heat::SoftwareConfig resource - this encapsulates the config to be applied, e.g a script, puppet manifest, or any other config definition format you care to use.  This is just a wrapper for the config to apply, optionally parameterized with input values, it doesn't actually configure anything.
@@ -139,11 +144,13 @@ An OS::Heat::SoftwareDeployment resource - this is the thing which actually appl
   An OS::Nova::Server resource - this is the instance (or physical server in the case of TripleO deploying via Nova and Ironic) being configured, it must contain some tools to support SoftwareConfig, as discussed below, and define the user_data_format property to enable SoftwareConfig.
 
 
-- Forth.yaml
+##- Forth.yaml
 
 Dermodtrates how execute scripts inside the deployed instance usiung cloud-init
 
 as you cansee, the script is not a resource, its a parameter
+```
+
 # heat resource-list a
 
 
@@ -152,7 +159,9 @@ as you cansee, the script is not a resource, its a parameter
 +---------------+--------------------------------------+------------------+-----------------+----------------------+
 | my_instance   | f78b5ba2-a3e6-4be7-9bc3-b570f09d19f6 | OS::Nova::Server | CREATE_COMPLETE | 2016-10-06T12:32:58Z |
 +---------------+--------------------------------------+------------------+-----------------+----------------------+
+```
 
+```
 
 ]# heat stack-show a
 
@@ -211,178 +220,7 @@ as you cansee, the script is not a resource, its a parameter
 | timeout_mins          | 60                                                                                                                   |
 | updated_time          | None                                                                                                                 |
 +-----------------------+----------------------------------------------------------------------------------------------------------------------+
+```
 
-
--Fifth.yML
-
-This template demostrates how to run a puppet manifest on a newly created server. It requires that the image you deploy have puppet and os-apply-config, etc
-Refer to the diskbuilder document https://github.com/ebarreraz/heat/blob/master/third_create_custom_image_for_software_deployment.txt
-
-To specify configuration as puppet manifests the heat-config-puppet element is required to be on the built image, so Custom image script needs to be modified with the following:
-
-export DEPLOYMENT_TOOL="heat-config-puppet"
-
-
-
-
-
-os-net-config:
-
-resorces that are type software config can also we seen with #heat config-list
-
-| fcf70aa4-002a-4a42-b632-a7374d33ad5e | NetworkDeployment                                                                                                                             | os-apply-config | 2016-09-21T11:47:53 |
-| 93ac76ff-9271-42e4-a2f3-d2b1b81cdd38 | NetworkDeployment                                                                                                                             | os-apply-config | 2016-09-21T11:47:53 |
-| a1a9ced1-3c19-4f3f-9e03-356ebd44d23d | NetworkDeployment                                                                                                                             | os-apply-config | 2016-09-21T11:47:52 |
-
-
-]$ heat config-show fcf70aa4-002a-4a42-b632-a7374d33ad5e
-WARNING (shell) "heat config-show" is deprecated, please use "openstack software config show" instead
-{
-  "inputs": [
-    {
-      "type": "String", 
-      "name": "interface_name", 
-      "value": "nic1"
-    }, 
-    {
-      "type": "String", 
-      "name": "bridge_name", 
-      "value": "br-ex"
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_server_id", 
-      "value": "a336660d-f61f-460d-8735-9beb4f2674cb", 
-      "description": "ID of the server being deployed to"
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_action", 
-      "value": "CREATE", 
-      "description": "Name of the current action being deployed"
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_stack_id", 
-      "value": "overcloud-Controller-qa7i4vnu5cl2-0-sinuvg4gendl/dd1f2e7f-fee9-44cb-9040-4a020ac5b3a0", 
-      "description": "ID of the stack this deployment belongs to"
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_resource_name", 
-      "value": "NetworkDeployment", 
-      "description": "Name of this deployment resource in the stack"
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_signal_transport", 
-      "value": "CFN_SIGNAL", 
-      "description": "How the server should signal to heat with the deployment output values."
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_signal_id", 
-      "value": "http://192.0.2.1:8000/v1/signal/arn%3Aopenstack%3Aheat%3A%3A1cc0ddff5ee64174b9424572ed533eaf%3Astacks%2Fovercloud-Controller-qa7i4vnu5cl2-0-sinuvg4gendl%2Fdd1f2e7f-fee9-44cb-9040-4a020ac5b3a0%2Fresources%2FNetworkDeployment?Timestamp=2016-09-21T11%3A41%3A12Z&SignatureMethod=HmacSHA256&AWSAccessKeyId=f472d07f717449559875b756f038f09a&SignatureVersion=2&Signature=5jx%2FeTEAq9DTNbuH%2F0nUxG00SMIY9FWcRBOj4cM6h7c%3D", 
-      "description": "ID of signal to use for signaling output values"
-    }, 
-    {
-      "type": "String", 
-      "name": "deploy_signal_verb", 
-      "value": "POST", 
-      "description": "HTTP verb to use for signaling output values"
-    }
-  ], 
-  "group": "os-apply-config", 
-  "name": "NetworkDeployment", 
-  "outputs": [], 
-  "creation_time": "2016-09-21T11:47:53", 
-  "options": {}, 
-  "config": {
-    "os_net_config": {
-      "network_config": [
-        {
-          "dns_servers": [
-            "192.168.23.1", 
-            "8.8.8.8"
-          ], 
-          "name": "br-ex", 
-          "members": [
-            {
-              "type": "interface", 
-              "name": "nic1", 
-              "primary": true
-            }, 
-            {
-              "routes": [
-                {
-                  "default": true, 
-                  "next_hop": "172.16.23.1"
-                }
-              ], 
-              "type": "vlan", 
-              "addresses": [
-                {
-                  "ip_netmask": "172.16.23.111/24"
-                }
-              ], 
-              "vlan_id": 10
-            }, 
-            {
-              "type": "vlan", 
-              "addresses": [
-                {
-                  "ip_netmask": "172.16.20.12/24"
-                }
-              ], 
-              "vlan_id": 20
-            }, 
-            {
-              "type": "vlan", 
-              "addresses": [
-                {
-                  "ip_netmask": "172.16.21.11/24"
-                }
-              ], 
-              "vlan_id": 30
-            }, 
-            {
-              "type": "vlan", 
-              "addresses": [
-                {
-                  "ip_netmask": "172.16.3.6/24"
-                }
-              ], 
-              "vlan_id": 40
-            }, 
-            {
-              "type": "vlan", 
-              "addresses": [
-                {
-                  "ip_netmask": "172.16.22.13/24"
-                }
-              ], 
-              "vlan_id": 50
-            }
-          ], 
-          "routes": [
-            {
-              "ip_netmask": "169.254.169.254/32", 
-              "next_hop": "192.0.2.1"
-            }
-          ], 
-          "use_dhcp": false, 
-          "type": "ovs_bridge", 
-          "addresses": [
-            {
-              "ip_netmask": "192.0.2.9/24"
-            }
-          ]
-        }
-      ]
-    }
-  }, 
-  "id": "fcf70aa4-002a-4a42-b632-a7374d33ad5e"
-}
-[stack@undercloud ~]$ 
 
 
