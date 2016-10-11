@@ -1,0 +1,5 @@
+parameters:
+  image: centos7-software-config
+  flavor: m1.small
+  key: laptop
+
