@@ -1,0 +1,83 @@
+heat_template_version: 2015-04-30
+
+description: Simple template to deploy a single compute instance
+
+parameters:
+  key:
+    type: string
+    default: laptop
+    label: Key to Use
+    description: Key that will be injected to the instance
+    constraints:
+      - custom_constraint: nova.keypair #validates that the key exist
+
+
+  flavor: 
+    type: string
+    label: Flavor
+    default: m1.small
+    constraints:
+      - custom_constraint: nova.flavor
+
+  image:
+    type: string
+    label: Image
+    default: centos7-cloudinit
+    constraints:
+      - custom_constraint: glance.image
+
+
+resources:
+
+  config:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: puppet
+      inputs:
+      - name: domain
+      - name: content
+      outputs:
+      - name: result
+      config:
+        get_file: fifth.pp
+
+  deployment:
+    type: OS::Heat::SoftwareDeployment
+    properties:
+      config:
+        get_resource: config
+      server:
+        get_resource: server
+      input_values:
+        domain: example.com
+        content: >
+           Listen 80
+           <VirtualHost *:80>
+            DocumentRoot "/www/example.com"
+            ServerName www.example.com
+           </VirtualHost>
+
+  server:
+    type: OS::Nova::Server
+    properties:
+      image: {get_param: image}
+      flavor: {get_param: flavor}
+      key_name: {get_param: key}
+      admin_pass: redhat
+      networks: 
+        - network: private
+      user_data_format: SOFTWARE_CONFIG
+
+outputs:
+  result:
+    value:
+      get_attr: [deployment, result]
+  stdout:
+    value:
+      get_attr: [deployment, deploy_stdout]
+
+
+
+
+
+
